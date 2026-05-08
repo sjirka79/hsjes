@@ -57,6 +57,11 @@ export default class CalendarPage extends Page {
         month: 'Měsíc',
         list: 'Seznam',
       },
+      views: {
+        listMonth: {
+          duration: { months: 6 },
+        },
+      },
       titleFormat: { year: 'numeric', month: 'long' },
       height: 'auto',
       eventClick: (info) => {

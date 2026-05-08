@@ -1,6 +1,7 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
+import EditPostComposer from 'flarum/forum/components/EditPostComposer';
 import DiscussionControls from 'flarum/forum/utils/DiscussionControls';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import Button from 'flarum/common/components/Button';
@@ -44,6 +45,33 @@ app.initializers.add('hsjes-calendar', () => {
             : 'hsjes-calendar.forum.controls.add_event'
         )
       )
+    );
+  });
+
+  // When editing the first post of a discussion, expose a button
+  // 'Upravit datum události' that opens the same EventModal.
+  extend(EditPostComposer.prototype, 'headerItems', function (items) {
+    const post = this.attrs.post;
+    if (!post || post.number() !== 1) return;
+
+    const discussion = post.discussion();
+    if (!discussion || !discussion.canRename()) return;
+
+    items.add(
+      'event',
+      Button.component(
+        {
+          icon: 'fas fa-calendar-alt',
+          className: 'Button Button--link',
+          onclick: () => app.modal.show(EventModal, { discussion }),
+        },
+        app.translator.trans(
+          discussion.attribute('isEvent')
+            ? 'hsjes-calendar.forum.controls.edit_event'
+            : 'hsjes-calendar.forum.controls.add_event'
+        )
+      ),
+      -10
     );
   });
 
