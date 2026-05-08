@@ -5,6 +5,13 @@ hsjes-calendar:
       starts_at: "Začátek"
       ends_at: "Konec"
       optional: "volitelné"
+    controls:
+      add_event: "Přidat datum"
+      edit_event: "Upravit datum"
+    modal:
+      title: "Datum události"
+      is_event: "Tato diskuze je událost"
+      save: "Uložit"
     page:
       title: "Kalendář"
       empty: "Žádné nadcházející akce."

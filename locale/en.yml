@@ -5,6 +5,13 @@ hsjes-calendar:
       starts_at: "Starts at"
       ends_at: "Ends at"
       optional: "optional"
+    controls:
+      add_event: "Add date"
+      edit_event: "Edit date"
+    modal:
+      title: "Event date"
+      is_event: "This discussion is an event"
+      save: "Save"
     page:
       title: "Calendar"
       empty: "No upcoming events."
