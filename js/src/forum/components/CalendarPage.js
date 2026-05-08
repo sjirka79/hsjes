@@ -3,7 +3,6 @@ import Page from 'flarum/common/components/Page';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import csLocale from '@fullcalendar/core/locales/cs';
 import flatpickr from 'flatpickr';
@@ -43,7 +42,7 @@ export default class CalendarPage extends Page {
     const isMobile = window.matchMedia('(max-width: 600px)').matches;
 
     this.calendar = new Calendar(el, {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+      plugins: [dayGridPlugin, listPlugin],
       initialView: isMobile ? 'listMonth' : 'dayGridMonth',
       locale: csLocale,
       timeZone: 'Europe/Prague',
@@ -51,12 +50,11 @@ export default class CalendarPage extends Page {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,listMonth',
+        right: 'dayGridMonth,listMonth',
       },
       buttonText: {
         today: 'Dnes',
         month: 'Měsíc',
-        week: 'Týden',
         list: 'Seznam',
       },
       titleFormat: { year: 'numeric', month: 'long' },
