@@ -28,7 +28,7 @@ app.initializers.add('hsjes-calendar', () => {
       'event-toggle',
       Button.component(
         {
-          className: 'Button' + (this.eventEnabled ? ' Button--primary' : ''),
+          className: 'Button EventToggle' + (this.eventEnabled ? ' EventToggle--on' : ''),
           icon: 'fas fa-calendar-alt',
           onclick: () => {
             this.eventEnabled = !this.eventEnabled;
@@ -40,7 +40,7 @@ app.initializers.add('hsjes-calendar', () => {
         },
         app.translator.trans('hsjes-calendar.forum.composer.event_toggle_button')
       ),
-      20
+      1
     );
 
     if (this.eventEnabled) {
@@ -70,7 +70,7 @@ app.initializers.add('hsjes-calendar', () => {
       'event-edit',
       Button.component(
         {
-          className: 'Button' + (isEvent ? ' Button--primary' : ''),
+          className: 'Button EventToggle' + (isEvent ? ' EventToggle--on' : ''),
           icon: 'fas fa-calendar-alt',
           onclick: () => app.modal.show(EventModal, { discussion }),
         },
@@ -80,7 +80,7 @@ app.initializers.add('hsjes-calendar', () => {
             : 'hsjes-calendar.forum.controls.add_event'
         )
       ),
-      20
+      -10
     );
   });
 

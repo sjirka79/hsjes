@@ -18,6 +18,9 @@ const addMonths = (d, n) => {
   return r;
 };
 
+const isoMonthStart = (d) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+
 const LIST_MONTHS = 6;
 
 export default class CalendarPage extends Page {
@@ -113,7 +116,7 @@ export default class CalendarPage extends Page {
     } else if (dir === 'today') {
       this.currentDate = startOfMonth(new Date());
     }
-    if (this.calendar) this.calendar.gotoDate(this.currentDate);
+    if (this.calendar) this.calendar.gotoDate(isoMonthStart(this.currentDate));
   }
 
   setMode(mode) {
@@ -125,7 +128,7 @@ export default class CalendarPage extends Page {
     this.calendar = new Calendar(el, {
       plugins: [dayGridPlugin],
       initialView: 'dayGridMonth',
-      initialDate: this.currentDate,
+      initialDate: isoMonthStart(this.currentDate),
       locale: csLocale,
       timeZone: 'Europe/Prague',
       firstDay: 1,
@@ -170,7 +173,7 @@ export default class CalendarPage extends Page {
       onChange: (dates) => {
         if (dates[0]) {
           this.currentDate = startOfMonth(dates[0]);
-          if (this.calendar) this.calendar.gotoDate(this.currentDate);
+          if (this.calendar) this.calendar.gotoDate(isoMonthStart(this.currentDate));
           m.redraw();
         }
       },

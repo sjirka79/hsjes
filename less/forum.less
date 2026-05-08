@@ -1,11 +1,45 @@
 // Composer event controls — just the range picker; the toggle is a
 // separate button in DiscussionComposer headerItems.
+//
+// Force the picker's <li> in ComposerBody-header to take the full row
+// so the formatted range (e.g. "8. 5. 2026 12:00 do 11. 5. 2026 14:00")
+// fits without truncation.
+.ComposerBody-header > .item-event-picker {
+  display: block !important;
+  width: 100% !important;
+  flex: 1 1 100% !important;
+}
+
 .EventComposerControls {
   width: 100%;
 
+  &-rangeInput,
+  input.flatpickr-input,
+  input.form-control.input {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
   &-rangeInput {
-    width: 100%;
-    height: 34px;
+    height: 28px;
+    padding: 4px 10px !important;
+    font-size: 13px;
+  }
+}
+
+// Toggle button used in DiscussionComposer + EditPostComposer.
+// We deliberately don't use Button--primary because the theme makes
+// it 44px tall, which is too big next to "Vybrat štítky" / "Přidat anketu".
+// The active state is signaled by a primary-color background only.
+.Button.EventToggle {
+  // Keep default Button height (don't trigger the primary-button enlargement)
+
+  &--on,
+  &--on:hover,
+  &--on:focus {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+    border-color: var(--primary-color) !important;
   }
 }
 
