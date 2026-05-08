@@ -3,8 +3,13 @@ import Page from 'flarum/common/components/Page';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import csLocale from '@fullcalendar/core/locales/cs';
+import flatpickr from 'flatpickr';
+import { Czech } from 'flatpickr/dist/l10n/cs.js';
+import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js';
+import 'flatpickr/dist/plugins/monthSelect/style.css';
 
 export default class CalendarPage extends Page {
   oninit(vnode) {
@@ -23,7 +28,10 @@ export default class CalendarPage extends Page {
           <div
             className="CalendarPage-calendar"
             oncreate={(vn) => this.mountCalendar(vn.dom)}
-            onremove={() => this.calendar?.destroy()}
+            onremove={() => {
+              this.calendar?.destroy();
+              this.titlePicker?.destroy();
+            }}
           />
           {this.loading ? <LoadingIndicator /> : null}
         </div>
@@ -35,7 +43,7 @@ export default class CalendarPage extends Page {
     const isMobile = window.matchMedia('(max-width: 600px)').matches;
 
     this.calendar = new Calendar(el, {
-      plugins: [dayGridPlugin, listPlugin],
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       initialView: isMobile ? 'listMonth' : 'dayGridMonth',
       locale: csLocale,
       timeZone: 'Europe/Prague',
@@ -43,13 +51,15 @@ export default class CalendarPage extends Page {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,listMonth',
+        right: 'dayGridMonth,timeGridWeek,listMonth',
       },
       buttonText: {
-        today: 'dnes',
-        month: 'měsíc',
-        list: 'seznam',
+        today: 'Dnes',
+        month: 'Měsíc',
+        week: 'Týden',
+        list: 'Seznam',
       },
+      titleFormat: { year: 'numeric', month: 'long' },
       height: 'auto',
       eventClick: (info) => {
         info.jsEvent.preventDefault();
@@ -61,6 +71,41 @@ export default class CalendarPage extends Page {
     });
 
     this.calendar.render();
+    this.attachTitlePicker(el);
+  }
+
+  attachTitlePicker(el) {
+    const titleEl = el.querySelector('.fc-toolbar-title');
+    if (!titleEl) return;
+
+    titleEl.classList.add('CalendarPage-title-picker');
+
+    const tempInput = document.createElement('input');
+    tempInput.type = 'text';
+    tempInput.className = 'CalendarPage-hiddenPicker';
+    el.appendChild(tempInput);
+
+    this.titlePicker = flatpickr(tempInput, {
+      locale: Czech,
+      defaultDate: this.calendar.getDate(),
+      plugins: [
+        new monthSelectPlugin({
+          shorthand: false,
+          dateFormat: 'Y-m',
+          altFormat: 'F Y',
+        }),
+      ],
+      positionElement: titleEl,
+      onChange: (dates) => {
+        if (dates[0]) this.calendar.gotoDate(dates[0]);
+      },
+    });
+
+    titleEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.titlePicker.setDate(this.calendar.getDate(), false);
+      this.titlePicker.open();
+    });
   }
 
   async fetchEvents(fetchInfo, success, failure) {

@@ -58,18 +58,34 @@
     border-radius: 4px;
   }
 
+  &-hiddenPicker {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   .fc {
     font-family: inherit;
+    color: var(--text-color);
   }
 
   .fc .fc-toolbar-title {
     font-size: 18px;
     font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    text-transform: capitalize;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .fc .fc-button {
     background: var(--control-bg);
-    color: var(--control-color);
+    color: var(--text-color);
     border-color: transparent;
     text-transform: none;
     font-weight: 500;
@@ -77,7 +93,8 @@
 
     &:hover {
       background: var(--control-bg);
-      filter: brightness(0.95);
+      filter: brightness(1.1);
+      color: var(--text-color);
     }
 
     &.fc-button-active,
@@ -85,6 +102,51 @@
       background: var(--primary-color);
       color: #fff;
     }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  // Day-of-week header (po, út, st, ...)
+  .fc .fc-col-header-cell {
+    background: var(--control-bg);
+    border-color: var(--body-bg);
+
+    .fc-col-header-cell-cushion {
+      color: var(--text-color);
+      padding: 8px 4px;
+      font-weight: 600;
+      text-decoration: none;
+      text-transform: capitalize;
+    }
+  }
+
+  // Day numbers in month grid
+  .fc .fc-daygrid-day-number {
+    color: var(--text-color);
+    text-decoration: none;
+  }
+
+  .fc .fc-day-other .fc-daygrid-day-number {
+    color: var(--muted-color);
+    opacity: 0.5;
+  }
+
+  // List view date separator (e.g. "9. května 2026 ... sobota")
+  .fc .fc-list-day-cushion,
+  .fc .fc-list-day th {
+    background: var(--control-bg) !important;
+
+    a, .fc-list-day-text, .fc-list-day-side-text {
+      color: var(--text-color);
+      text-decoration: none;
+    }
+  }
+
+  .fc .fc-list,
+  .fc .fc-list-table td {
+    border-color: var(--control-bg);
   }
 
   .fc .fc-event {
@@ -95,6 +157,11 @@
 
   .fc .fc-list-event:hover td {
     background: var(--control-bg);
+  }
+
+  // Today highlight
+  .fc .fc-day-today {
+    background: rgba(255, 255, 255, 0.04) !important;
   }
 }
 
