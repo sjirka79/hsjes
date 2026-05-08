@@ -21,62 +21,33 @@ const formatDate = (d) => {
 };
 
 export default class EventComposerControls extends Component {
-  oninit(vnode) {
-    super.oninit(vnode);
-    const c = this.attrs.composer;
-    if (typeof c.eventEnabled === 'undefined') c.eventEnabled = !!c.eventStartsAt;
-    if (typeof c.eventStartsAt === 'undefined') c.eventStartsAt = null;
-    if (typeof c.eventEndsAt === 'undefined') c.eventEndsAt = null;
-  }
-
   onremove() {
     this.picker?.destroy();
   }
 
   view() {
     const c = this.attrs.composer;
-
     return (
       <div className="EventComposerControls">
-        <label className="EventComposerControls-toggle checkbox">
-          <input
-            type="checkbox"
-            checked={c.eventEnabled}
-            onchange={(e) => {
-              c.eventEnabled = e.target.checked;
-              if (!c.eventEnabled) {
-                c.eventStartsAt = null;
-                c.eventEndsAt = null;
-              }
-            }}
-          />
-          {' '}
-          {app.translator.trans('hsjes-calendar.forum.composer.create_event')}
-        </label>
+        <input
+          type="text"
+          className="FormControl EventComposerControls-rangeInput"
+          placeholder={app.translator.trans('hsjes-calendar.forum.composer.range_placeholder')}
+          oncreate={(vn) => {
+            const initial = [];
+            if (c.eventStartsAt) initial.push(c.eventStartsAt);
+            if (c.eventEndsAt) initial.push(c.eventEndsAt);
 
-        {c.eventEnabled ? (
-          <div className="EventComposerControls-range">
-            <input
-              type="text"
-              className="FormControl EventComposerControls-rangeInput"
-              placeholder={app.translator.trans('hsjes-calendar.forum.composer.range_placeholder')}
-              oncreate={(vn) => {
-                const initial = [];
-                if (c.eventStartsAt) initial.push(c.eventStartsAt);
-                if (c.eventEndsAt) initial.push(c.eventEndsAt);
-
-                this.picker = flatpickr(vn.dom, {
-                  ...FLATPICKR_OPTS,
-                  defaultDate: initial.length ? initial : null,
-                  onChange: (dates) => {
-                    c.eventStartsAt = dates[0] ? formatDate(dates[0]) : null;
-                    c.eventEndsAt = dates[1] ? formatDate(dates[1]) : null;
-                  },
-                });
-              }}
-            />
-          </div>
-        ) : null}
+            this.picker = flatpickr(vn.dom, {
+              ...FLATPICKR_OPTS,
+              defaultDate: initial.length ? initial : null,
+              onChange: (dates) => {
+                c.eventStartsAt = dates[0] ? formatDate(dates[0]) : null;
+                c.eventEndsAt = dates[1] ? formatDate(dates[1]) : null;
+              },
+            });
+          }}
+        />
       </div>
     );
   }

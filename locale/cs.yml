@@ -2,6 +2,7 @@ hsjes-calendar:
   forum:
     composer:
       create_event: "Vytvořit událost"
+      event_toggle_button: "Datum události"
       starts_at: "Začátek"
       ends_at: "Konec"
       optional: "volitelné"
@@ -17,3 +18,6 @@ hsjes-calendar:
       title: "Kalendář"
       empty: "Žádné nadcházející akce."
       upcoming: "Nadcházející akce"
+      today: "Dnes"
+      month: "Měsíc"
+      list: "Seznam"

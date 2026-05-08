@@ -1,20 +1,33 @@
 import app from 'flarum/forum/app';
 import Page from 'flarum/common/components/Page';
-import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import listPlugin from '@fullcalendar/list';
 import csLocale from '@fullcalendar/core/locales/cs';
 import flatpickr from 'flatpickr';
 import { Czech } from 'flatpickr/dist/l10n/cs.js';
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js';
 import 'flatpickr/dist/plugins/monthSelect/style.css';
 
+import UpcomingList, { fmtMonthYear } from './UpcomingList';
+
+const startOfMonth = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
+
+const addMonths = (d, n) => {
+  const r = new Date(d.getTime());
+  r.setMonth(r.getMonth() + n);
+  return r;
+};
+
+const LIST_MONTHS = 6;
+
 export default class CalendarPage extends Page {
   oninit(vnode) {
     super.oninit(vnode);
     app.history.push('hsjes-calendar', app.translator.trans('hsjes-calendar.forum.page.title'));
     this.bodyClass = 'App--calendar';
+
+    this.mode = window.matchMedia('(max-width: 600px)').matches ? 'list' : 'month';
+    this.currentDate = startOfMonth(new Date());
   }
 
   view() {
@@ -24,91 +37,145 @@ export default class CalendarPage extends Page {
           <h1 className="CalendarPage-title">
             {app.translator.trans('hsjes-calendar.forum.page.title')}
           </h1>
-          <div
-            className="CalendarPage-calendar"
-            oncreate={(vn) => this.mountCalendar(vn.dom)}
-            onremove={() => {
-              this.calendar?.destroy();
-              this.titlePicker?.destroy();
-            }}
-          />
-          {this.loading ? <LoadingIndicator /> : null}
+
+          <div className="CalendarPage-toolbar">
+            <div className="CalendarPage-nav">
+              <button className="Button" onclick={() => this.navigate('prev')}>‹</button>
+              <button className="Button" onclick={() => this.navigate('next')}>›</button>
+              <button className="Button" onclick={() => this.navigate('today')}>
+                {app.translator.trans('hsjes-calendar.forum.page.today')}
+              </button>
+            </div>
+
+            <div
+              className="CalendarPage-titleText"
+              onclick={(e) => this.openTitlePicker(e.currentTarget)}
+            >
+              {this.titleText()}
+            </div>
+
+            <div className="CalendarPage-modes">
+              <button
+                className={'Button' + (this.mode === 'month' ? ' Button--primary' : '')}
+                onclick={() => this.setMode('month')}
+              >
+                {app.translator.trans('hsjes-calendar.forum.page.month')}
+              </button>
+              <button
+                className={'Button' + (this.mode === 'list' ? ' Button--primary' : '')}
+                onclick={() => this.setMode('list')}
+              >
+                {app.translator.trans('hsjes-calendar.forum.page.list')}
+              </button>
+            </div>
+          </div>
+
+          {this.mode === 'month' ? (
+            <div
+              className="CalendarPage-month"
+              oncreate={(vn) => this.mountCalendar(vn.dom)}
+              onremove={() => {
+                this.calendar?.destroy();
+                this.calendar = null;
+              }}
+            />
+          ) : (
+            <UpcomingList from={this.currentDate} months={LIST_MONTHS} />
+          )}
         </div>
       </div>
     );
   }
 
-  mountCalendar(el) {
-    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+  onremove() {
+    this.calendar?.destroy();
+    this.titlePicker?.destroy();
+  }
 
+  titleText() {
+    if (this.mode === 'month') {
+      return fmtMonthYear(this.currentDate);
+    }
+    const end = addMonths(this.currentDate, LIST_MONTHS - 1);
+    const sMonth = this.currentDate.toLocaleDateString('cs-CZ', { month: 'long' });
+    const eMonth = end.toLocaleDateString('cs-CZ', { month: 'long' });
+    if (this.currentDate.getFullYear() === end.getFullYear()) {
+      return `${sMonth} – ${eMonth} ${this.currentDate.getFullYear()}`;
+    }
+    return `${sMonth} ${this.currentDate.getFullYear()} – ${eMonth} ${end.getFullYear()}`;
+  }
+
+  navigate(dir) {
+    if (dir === 'prev') {
+      this.currentDate = addMonths(this.currentDate, -1);
+    } else if (dir === 'next') {
+      this.currentDate = addMonths(this.currentDate, 1);
+    } else if (dir === 'today') {
+      this.currentDate = startOfMonth(new Date());
+    }
+    if (this.calendar) this.calendar.gotoDate(this.currentDate);
+  }
+
+  setMode(mode) {
+    if (this.mode === mode) return;
+    this.mode = mode;
+  }
+
+  mountCalendar(el) {
     this.calendar = new Calendar(el, {
-      plugins: [dayGridPlugin, listPlugin],
-      initialView: isMobile ? 'listMonth' : 'dayGridMonth',
+      plugins: [dayGridPlugin],
+      initialView: 'dayGridMonth',
+      initialDate: this.currentDate,
       locale: csLocale,
       timeZone: 'Europe/Prague',
       firstDay: 1,
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,listMonth',
-      },
-      buttonText: {
-        today: 'Dnes',
-        month: 'Měsíc',
-        list: 'Seznam',
-      },
-      views: {
-        listMonth: {
-          duration: { months: 6 },
-        },
-      },
+      headerToolbar: false,
       titleFormat: { year: 'numeric', month: 'long' },
       height: 'auto',
       eventClick: (info) => {
         info.jsEvent.preventDefault();
-        if (info.event.url) {
-          m.route.set(info.event.url);
-        }
+        if (info.event.url) m.route.set(info.event.url);
       },
       events: (fetchInfo, success, failure) => this.fetchEvents(fetchInfo, success, failure),
+      datesSet: (arg) => {
+        const newDate = startOfMonth(arg.view.currentStart);
+        if (+newDate !== +this.currentDate) {
+          this.currentDate = newDate;
+          m.redraw();
+        }
+      },
     });
-
     this.calendar.render();
-    this.attachTitlePicker(el);
   }
 
-  attachTitlePicker(el) {
-    const titleEl = el.querySelector('.fc-toolbar-title');
-    if (!titleEl) return;
-
-    titleEl.classList.add('CalendarPage-title-picker');
+  openTitlePicker(anchor) {
+    if (this.titlePicker) {
+      this.titlePicker.setDate(this.currentDate, false);
+      this.titlePicker.open();
+      return;
+    }
 
     const tempInput = document.createElement('input');
     tempInput.type = 'text';
-    tempInput.className = 'CalendarPage-hiddenPicker';
-    el.appendChild(tempInput);
+    tempInput.style.cssText = 'position:absolute;width:0;height:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(tempInput);
 
     this.titlePicker = flatpickr(tempInput, {
       locale: Czech,
-      defaultDate: this.calendar.getDate(),
+      defaultDate: this.currentDate,
       plugins: [
-        new monthSelectPlugin({
-          shorthand: false,
-          dateFormat: 'Y-m',
-          altFormat: 'F Y',
-        }),
+        new monthSelectPlugin({ shorthand: false, dateFormat: 'Y-m', altFormat: 'F Y' }),
       ],
-      positionElement: titleEl,
+      positionElement: anchor,
       onChange: (dates) => {
-        if (dates[0]) this.calendar.gotoDate(dates[0]);
+        if (dates[0]) {
+          this.currentDate = startOfMonth(dates[0]);
+          if (this.calendar) this.calendar.gotoDate(this.currentDate);
+          m.redraw();
+        }
       },
     });
-
-    titleEl.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.titlePicker.setDate(this.calendar.getDate(), false);
-      this.titlePicker.open();
-    });
+    this.titlePicker.open();
   }
 
   async fetchEvents(fetchInfo, success, failure) {

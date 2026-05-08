@@ -1,45 +1,11 @@
-// Composer event controls — compact one-row layout so we don't push
-// the editor off-screen.
+// Composer event controls — just the range picker; the toggle is a
+// separate button in DiscussionComposer headerItems.
 .EventComposerControls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 6px 0;
-  flex-wrap: wrap;
-
-  &-toggle {
-    margin: 0;
-    cursor: pointer;
-    user-select: none;
-    white-space: nowrap;
-    font-weight: 500;
-
-    input[type='checkbox'] {
-      margin-right: 4px;
-      vertical-align: middle;
-    }
-  }
-
-  &-range {
-    flex: 1 1 260px;
-    min-width: 220px;
-  }
+  width: 100%;
 
   &-rangeInput {
     width: 100%;
     height: 34px;
-  }
-}
-
-@media (max-width: 600px) {
-  .EventComposerControls {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-  }
-
-  .EventComposerControls-toggle {
-    white-space: normal;
   }
 }
 
@@ -51,7 +17,7 @@
 }
 
 /* =========================================================
-   Calendar page – tuned for HS Jeseníky dark theme
+   Calendar page – dark theme tuned
    ========================================================= */
 
 .CalendarPage {
@@ -64,85 +30,64 @@
     color: var(--text-color);
   }
 
-  &-calendar {
-    background: transparent;
-  }
-
-  &-hiddenPicker {
-    position: absolute;
-    width: 0;
-    height: 0;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  // FullCalendar global vars (v6 hooks)
-  .fc {
-    font-family: inherit;
-    color: var(--text-color);
-    --fc-border-color: var(--control-bg);
-    --fc-page-bg-color: var(--body-bg);
-    --fc-neutral-bg-color: var(--control-bg);
-    --fc-list-event-hover-bg-color: var(--control-bg);
-    --fc-today-bg-color: rgba(96, 165, 250, 0.08);
-  }
-
-  .fc .fc-toolbar {
-    margin-bottom: 16px;
+  &-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
   }
 
-  .fc .fc-toolbar-title {
+  &-nav {
+    display: flex;
+    gap: 0;
+
+    .Button {
+      border-radius: 0 !important;
+      padding: 6px 14px !important;
+    }
+  }
+
+  &-titleText {
+    flex: 1 1 auto;
+    text-align: center;
     font-size: 18px;
     font-weight: 700;
+    color: var(--text-color);
     cursor: pointer;
     user-select: none;
     text-transform: capitalize;
-    color: var(--text-color);
+    padding: 6px 12px;
 
     &:hover {
       text-decoration: underline;
     }
   }
 
-  // Toolbar buttons – match theme .Button (sharp corners, surface-2 bg)
-  .fc .fc-button {
-    background: var(--control-bg) !important;
-    color: var(--text-color) !important;
-    border: 1px solid transparent !important;
-    border-radius: 0 !important;
-    text-transform: none !important;
-    font-weight: 500 !important;
-    box-shadow: none !important;
-    padding: 6px 14px !important;
-    height: 34px;
+  &-modes {
+    display: flex;
+    gap: 0;
 
-    &:hover:not(:disabled) {
-      background: var(--control-bg) !important;
-      filter: brightness(1.3);
-      color: #fff !important;
-    }
-
-    &.fc-button-active,
-    &:not(:disabled):active {
-      background: var(--primary-color) !important;
-      color: #fff !important;
-    }
-
-    &:disabled {
-      opacity: 0.4 !important;
-    }
-
-    &:focus {
-      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3) !important;
+    .Button {
+      border-radius: 0 !important;
     }
   }
 
-  .fc .fc-button-group .fc-button + .fc-button {
-    border-left: 1px solid rgba(0, 0, 0, 0.25) !important;
+  &-month {
+    background: transparent;
   }
 
-  // Day-of-week header row (Po, Út, St, ...)
+  // FullCalendar styling for the month grid
+  .fc {
+    font-family: inherit;
+    color: var(--text-color);
+    --fc-border-color: var(--control-bg);
+    --fc-page-bg-color: var(--body-bg);
+    --fc-neutral-bg-color: var(--control-bg);
+    --fc-today-bg-color: rgba(96, 165, 250, 0.08);
+  }
+
   .fc .fc-col-header-cell {
     background: var(--control-bg);
 
@@ -156,7 +101,6 @@
     }
   }
 
-  // Day numbers in month grid
   .fc .fc-daygrid-day-number {
     color: var(--text-color);
     text-decoration: none;
@@ -169,57 +113,99 @@
     opacity: 0.45;
   }
 
-  // List view: date separator row (e.g. "9. května 2026 ... sobota")
-  .fc .fc-list-day-cushion,
-  .fc .fc-list-day th {
-    background: var(--control-bg) !important;
-
-    a, .fc-list-day-text, .fc-list-day-side-text {
-      color: var(--text-color);
-      text-decoration: none;
-      font-weight: 700;
-    }
-  }
-
-  .fc .fc-list,
-  .fc .fc-list-table td {
-    border-color: var(--control-bg);
-  }
-
-  .fc .fc-list-event-time,
-  .fc .fc-list-event-title,
-  .fc .fc-list-event-title a {
-    color: var(--text-color);
-  }
-
-  .fc .fc-list-empty {
-    background: transparent;
-    color: var(--muted-color);
-  }
-
-  // Event chips
   .fc .fc-event {
     cursor: pointer;
     padding: 1px 6px;
     border-radius: 3px;
     font-weight: 600;
   }
+}
 
-  .fc .fc-list-event:hover td {
-    background: var(--control-bg) !important;
+/* =========================================================
+   UpcomingList – custom list view (one row per event)
+   ========================================================= */
+
+.UpcomingList {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--control-bg);
+
+  &-loading,
+  &-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted-color);
+  }
+
+  &-event {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    color: var(--text-color);
+    text-decoration: none;
+    border-bottom: 1px solid var(--control-bg);
+    transition: background 120ms;
+
+    &:hover,
+    &:focus {
+      background: var(--control-bg);
+      color: var(--text-color);
+      text-decoration: none;
+    }
+  }
+
+  &-eventDot {
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary-color);
+  }
+
+  &-eventDate {
+    flex: 0 0 auto;
+    min-width: 220px;
+    color: var(--muted-color);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  &-eventTitle {
+    flex: 1 1 auto;
+    font-weight: 600;
   }
 }
 
 @media (max-width: 600px) {
-  .CalendarPage .fc .fc-toolbar {
-    flex-direction: column;
-    gap: 8px;
+  .CalendarPage-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .CalendarPage-titleText {
+    flex: 1 1 100%;
+    order: -1;
+    text-align: center;
+  }
+
+  .UpcomingList-event {
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
+  .UpcomingList-eventDate {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .UpcomingList-eventTitle {
+    flex: 1 1 100%;
+    margin-left: 24px;
   }
 }
 
 /* =========================================================
    Flatpickr – dark theme overrides
-   (used in composer, edit modal, and calendar title picker)
    ========================================================= */
 
 .flatpickr-calendar {
@@ -283,11 +269,27 @@
     &:hover { background: var(--link-color) !important; color: #fff !important; }
   }
 
+  // Range mode: between start and end. Default is white-ish, force dark blue.
+  &.inRange,
+  &.inRange:hover,
+  &.inRange:focus {
+    background: rgba(21, 101, 192, 0.35) !important;
+    border-color: transparent !important;
+    color: var(--text-color) !important;
+    box-shadow: -5px 0 0 rgba(21, 101, 192, 0.35), 5px 0 0 rgba(21, 101, 192, 0.35) !important;
+  }
+
   &.selected, &.selected:hover,
-  &.startRange, &.endRange {
+  &.startRange, &.startRange:hover,
+  &.endRange, &.endRange:hover {
     background: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     color: #fff !important;
+    box-shadow: none !important;
+  }
+
+  &.startRange.endRange {
+    border-radius: 50px;
   }
 }
 

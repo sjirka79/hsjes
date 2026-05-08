@@ -2,6 +2,7 @@ hsjes-calendar:
   forum:
     composer:
       create_event: "Create event"
+      event_toggle_button: "Event date"
       starts_at: "Starts at"
       ends_at: "Ends at"
       optional: "optional"
@@ -17,3 +18,6 @@ hsjes-calendar:
       title: "Calendar"
       empty: "No upcoming events."
       upcoming: "Upcoming events"
+      today: "Today"
+      month: "Month"
+      list: "List"
