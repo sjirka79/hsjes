@@ -43,3 +43,64 @@
     gap: 8px;
   }
 }
+
+.CalendarPage {
+  padding: 24px 0 48px;
+
+  &-title {
+    margin: 0 0 24px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  &-calendar {
+    background: var(--body-bg);
+    border-radius: 4px;
+  }
+
+  .fc {
+    font-family: inherit;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .fc .fc-button {
+    background: var(--control-bg);
+    color: var(--control-color);
+    border-color: transparent;
+    text-transform: none;
+    font-weight: 500;
+    box-shadow: none;
+
+    &:hover {
+      background: var(--control-bg);
+      filter: brightness(0.95);
+    }
+
+    &.fc-button-active,
+    &:not(:disabled):active {
+      background: var(--primary-color);
+      color: #fff;
+    }
+  }
+
+  .fc .fc-event {
+    cursor: pointer;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+
+  .fc .fc-list-event:hover td {
+    background: var(--control-bg);
+  }
+}
+
+@media (max-width: 600px) {
+  .CalendarPage .fc .fc-toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
