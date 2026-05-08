@@ -1,0 +1,11 @@
+hsjes-calendar:
+  forum:
+    composer:
+      create_event: "Create event"
+      starts_at: "Starts at"
+      ends_at: "Ends at"
+      optional: "optional"
+    page:
+      title: "Calendar"
+      empty: "No upcoming events."
+      upcoming: "Upcoming events"

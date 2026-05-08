@@ -1,0 +1,11 @@
+hsjes-calendar:
+  forum:
+    composer:
+      create_event: "Vytvořit událost"
+      starts_at: "Začátek"
+      ends_at: "Konec"
+      optional: "volitelné"
+    page:
+      title: "Kalendář"
+      empty: "Žádné nadcházející akce."
+      upcoming: "Nadcházející akce"

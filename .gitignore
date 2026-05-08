@@ -4,3 +4,7 @@ composer.lock
 .vscode
 *.log
 .DS_Store
+
+# JS build artifacts: node_modules ignored, dist committed for distribution
+js/node_modules
+js/dist/*.js.map

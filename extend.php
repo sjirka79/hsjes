@@ -12,6 +12,15 @@ use Hsjes\Calendar\Api\Controller\ListCalendarController;
 use Hsjes\Calendar\Listener\SaveEventToDatabase;
 
 return [
+    (new Extend\Frontend('forum'))
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/less/forum.less'),
+
+    (new Extend\Frontend('admin'))
+        ->js(__DIR__.'/js/dist/admin.js'),
+
+    new Extend\Locales(__DIR__.'/locale'),
+
     (new Extend\Model(Discussion::class))
         ->relationship('event', function (Discussion $discussion) {
             return $discussion->hasOne(DiscussionEvent::class);

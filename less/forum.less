@@ -1,0 +1,45 @@
+.EventComposerControls {
+  margin-top: 8px;
+
+  &-toggle {
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+
+    input[type='checkbox'] {
+      margin-right: 4px;
+    }
+  }
+
+  &-fields {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  &-field {
+    flex: 1 1 200px;
+    min-width: 180px;
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+  }
+
+  &-optional {
+    font-weight: normal;
+    color: var(--muted-color);
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .EventComposerControls-fields {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
