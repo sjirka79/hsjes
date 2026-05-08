@@ -5,6 +5,7 @@ hsjes-calendar:
       starts_at: "Začátek"
       ends_at: "Konec"
       optional: "volitelné"
+      range_placeholder: "Vyber začátek a konec…"
     controls:
       add_event: "Přidat datum"
       edit_event: "Upravit datum"

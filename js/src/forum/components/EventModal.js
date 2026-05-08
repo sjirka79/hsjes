@@ -6,6 +6,7 @@ import { Czech } from 'flatpickr/dist/l10n/cs.js';
 
 const FLATPICKR_OPTS = {
   locale: Czech,
+  mode: 'range',
   enableTime: true,
   time_24hr: true,
   dateFormat: 'Y-m-d H:i',
@@ -14,12 +15,16 @@ const FLATPICKR_OPTS = {
   minuteIncrement: 15,
 };
 
-const formatForFlatpickr = (iso) => {
+const formatDate = (d) => {
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+};
+
+const isoToFlatpickr = (iso) => {
   if (!iso) return null;
   const d = new Date(iso);
   if (isNaN(d.getTime())) return null;
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return formatDate(d);
 };
 
 export default class EventModal extends Modal {
@@ -27,14 +32,13 @@ export default class EventModal extends Modal {
     super.oninit(vnode);
     const discussion = this.attrs.discussion;
     this.enabled = !!discussion.attribute('isEvent');
-    this.startsAt = formatForFlatpickr(discussion.attribute('startsAt'));
-    this.endsAt = formatForFlatpickr(discussion.attribute('endsAt'));
+    this.startsAt = isoToFlatpickr(discussion.attribute('startsAt'));
+    this.endsAt = isoToFlatpickr(discussion.attribute('endsAt'));
     this.loading = false;
   }
 
   onremove(vnode) {
-    this.startsPicker?.destroy();
-    this.endsPicker?.destroy();
+    this.picker?.destroy();
     super.onremove(vnode);
   }
 
@@ -49,7 +53,7 @@ export default class EventModal extends Modal {
   content() {
     return (
       <div className="Modal-body">
-        <div className="Form">
+        <div className="Form EventModal-form">
           <div className="Form-group">
             <label className="checkbox">
               <input
@@ -69,45 +73,30 @@ export default class EventModal extends Modal {
           </div>
 
           {this.enabled ? (
-            <div className="EventModal-fields">
-              <div className="Form-group">
-                <label>{app.translator.trans('hsjes-calendar.forum.composer.starts_at')}</label>
-                <input
-                  type="text"
-                  className="FormControl"
-                  oncreate={(vn) => {
-                    this.startsPicker = flatpickr(vn.dom, {
-                      ...FLATPICKR_OPTS,
-                      defaultDate: this.startsAt || null,
-                      onChange: (_d, str) => { this.startsAt = str; },
-                    });
-                  }}
-                />
-              </div>
-              <div className="Form-group">
-                <label>
-                  {app.translator.trans('hsjes-calendar.forum.composer.ends_at')}
-                  {' '}
-                  <span className="EventComposerControls-optional">
-                    ({app.translator.trans('hsjes-calendar.forum.composer.optional')})
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  className="FormControl"
-                  oncreate={(vn) => {
-                    this.endsPicker = flatpickr(vn.dom, {
-                      ...FLATPICKR_OPTS,
-                      defaultDate: this.endsAt || null,
-                      onChange: (_d, str) => { this.endsAt = str; },
-                    });
-                  }}
-                />
-              </div>
+            <div className="Form-group">
+              <input
+                type="text"
+                className="FormControl"
+                placeholder={app.translator.trans('hsjes-calendar.forum.composer.range_placeholder')}
+                oncreate={(vn) => {
+                  const initial = [];
+                  if (this.startsAt) initial.push(this.startsAt);
+                  if (this.endsAt) initial.push(this.endsAt);
+
+                  this.picker = flatpickr(vn.dom, {
+                    ...FLATPICKR_OPTS,
+                    defaultDate: initial.length ? initial : null,
+                    onChange: (dates) => {
+                      this.startsAt = dates[0] ? formatDate(dates[0]) : null;
+                      this.endsAt = dates[1] ? formatDate(dates[1]) : null;
+                    },
+                  });
+                }}
+              />
             </div>
           ) : null}
 
-          <div className="Form-group">
+          <div className="Form-group EventModal-actions">
             {Button.component(
               {
                 type: 'submit',

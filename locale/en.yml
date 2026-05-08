@@ -5,6 +5,7 @@ hsjes-calendar:
       starts_at: "Starts at"
       ends_at: "Ends at"
       optional: "optional"
+      range_placeholder: "Pick start and end…"
     controls:
       add_event: "Add date"
       edit_event: "Edit date"

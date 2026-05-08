@@ -1,46 +1,52 @@
+// Composer event controls — compact one-row layout so we don't push
+// the editor off-screen.
 .EventComposerControls {
-  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 0;
+  flex-wrap: wrap;
 
   &-toggle {
-    font-weight: 600;
+    margin: 0;
     cursor: pointer;
     user-select: none;
+    white-space: nowrap;
+    font-weight: 500;
 
     input[type='checkbox'] {
       margin-right: 4px;
+      vertical-align: middle;
     }
   }
 
-  &-fields {
-    display: flex;
-    gap: 12px;
-    margin-top: 8px;
-    flex-wrap: wrap;
+  &-range {
+    flex: 1 1 260px;
+    min-width: 220px;
   }
 
-  &-field {
-    flex: 1 1 200px;
-    min-width: 180px;
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 4px;
-      font-size: 13px;
-    }
-  }
-
-  &-optional {
-    font-weight: normal;
-    color: var(--muted-color);
-    font-size: 12px;
+  &-rangeInput {
+    width: 100%;
+    height: 34px;
   }
 }
 
 @media (max-width: 600px) {
-  .EventComposerControls-fields {
+  .EventComposerControls {
     flex-direction: column;
-    gap: 8px;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .EventComposerControls-toggle {
+    white-space: normal;
+  }
+}
+
+// Event modal — breathing room before the Save button
+.EventModal {
+  &-actions {
+    margin-top: 18px;
   }
 }
 
