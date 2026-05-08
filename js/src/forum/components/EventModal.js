@@ -103,7 +103,6 @@ export default class EventModal extends Modal {
                 className: 'Button Button--primary',
                 loading: this.loading,
                 disabled: this.enabled && !this.startsAt,
-                onclick: () => this.onsubmit(),
               },
               app.translator.trans('hsjes-calendar.forum.modal.save')
             )}
@@ -113,8 +112,11 @@ export default class EventModal extends Modal {
     );
   }
 
-  async onsubmit() {
+  async onsubmit(e) {
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+
     const discussion = this.attrs.discussion;
+    if (this.loading) return;
     this.loading = true;
 
     const attributes = this.enabled
