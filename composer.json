@@ -1,0 +1,33 @@
+{
+    "name": "hsjes/flarum-calendar",
+    "description": "Kalendář nad diskuzemi pro Flarum – diskuze = událost.",
+    "keywords": [
+        "flarum",
+        "calendar",
+        "discussions",
+        "events"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "require": {
+        "flarum/core": "^1.8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hsjes\\Calendar\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "HSJES Calendar",
+            "category": "feature",
+            "icon": {
+                "name": "fas fa-calendar-alt",
+                "backgroundColor": "#2c5f8d",
+                "color": "#fff"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
