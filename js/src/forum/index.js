@@ -39,11 +39,11 @@ app.initializers.add('hsjes-calendar', () => {
         },
         app.translator.trans('hsjes-calendar.forum.composer.event_toggle_button')
       ),
-      -1000
+      1
     );
 
     if (this.eventEnabled) {
-      items.add('event-picker', EventComposerControls.component({ composer: this }), -1010);
+      items.add('event-picker', EventComposerControls.component({ composer: this }), -10);
     }
   });
 
