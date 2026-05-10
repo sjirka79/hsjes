@@ -2,19 +2,20 @@
 // separate <a> in DiscussionComposer headerItems.
 // Range picker is rendered as <h3 class="EventComposerControls"><input/></h3>
 // to mirror the discussionTitle structure exactly. Reset h3 margin so it
-// doesn't push surrounding items.
+// doesn't push surrounding items. We deliberately DON'T force width on
+// the input — Flarum's default styling for .ComposerBody-header h3 input
+// gives the same width as the title field.
 h3.EventComposerControls,
 .EventComposerControls {
   margin: 0 !important;
-  width: 100%;
+}
 
-  input.FormControl,
-  input.flatpickr-input,
-  input.form-control.input,
-  &-rangeInput {
-    width: 100% !important;
-    box-sizing: border-box;
-  }
+// Match the placeholder color of the title input — Flatpickr's alt input
+// can otherwise inherit a different color via its extra .form-control class.
+.EventComposerControls input::placeholder,
+.EventComposerControls input::-webkit-input-placeholder {
+  color: var(--muted-color);
+  opacity: 1;
 }
 
 // Composer event toggle — uses <span class="TagLabel untagged"> directly

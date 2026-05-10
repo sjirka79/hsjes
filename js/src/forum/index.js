@@ -92,10 +92,9 @@ app.initializers.add('hsjes-calendar', () => {
   });
 
   // Add 'Upravit datum' to the dropdown menu of the FIRST POST of a
-  // discussion (the post-level menu next to Reply -> ...). Mirrors the
-  // existing entry in DiscussionControls so the action is reachable
-  // both from the discussion list and from the post itself.
-  extend(PostControls, 'userControls', function (items, post) {
+  // discussion. Using moderationControls so the entry renders between
+  // userControls (Upravit, Přidat anketu) and destructiveControls (Smazat).
+  extend(PostControls, 'moderationControls', function (items, post) {
     if (!post) return;
     const num = typeof post.number === 'function' ? post.number() : post.number;
     if (Number(num) !== 1) return;
