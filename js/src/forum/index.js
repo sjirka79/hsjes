@@ -37,7 +37,7 @@ app.initializers.add('hsjes-calendar', () => {
       <a className="DiscussionComposer-eventToggle" onclick={onToggle}>
         <span
           className={
-            'EventLabel' + (this.eventEnabled ? ' EventLabel--on' : ' EventLabel--off')
+            this.eventEnabled ? 'TagLabel EventLabel--on' : 'TagLabel untagged'
           }
         >
           {app.translator.trans('hsjes-calendar.forum.composer.event_toggle_button')}
@@ -62,28 +62,31 @@ app.initializers.add('hsjes-calendar', () => {
   // 'Datum události' that opens the EventModal.
   extend(EditPostComposer.prototype, 'headerItems', function (items) {
     const post = this.attrs.post;
-    if (!post || post.number() !== 1) return;
+    if (!post) return;
 
-    const discussion = post.discussion();
-    if (!discussion || !discussion.canRename()) return;
+    const num = typeof post.number === 'function' ? post.number() : post.number;
+    if (Number(num) !== 1) return;
+
+    const discussion = typeof post.discussion === 'function' ? post.discussion() : null;
+    if (!discussion) return;
 
     const isEvent = !!discussion.attribute('isEvent');
 
     items.add(
       'event-edit',
-      Button.component(
-        {
-          className: 'Button EventToggle' + (isEvent ? ' EventToggle--on' : ''),
-          icon: 'fas fa-calendar-alt',
-          onclick: () => app.modal.show(EventModal, { discussion }),
-        },
-        app.translator.trans(
-          isEvent
-            ? 'hsjes-calendar.forum.controls.edit_event'
-            : 'hsjes-calendar.forum.controls.add_event'
-        )
-      ),
-      -10
+      <a
+        className="DiscussionComposer-eventToggle"
+        onclick={() => app.modal.show(EventModal, { discussion })}
+      >
+        <span className={isEvent ? 'TagLabel EventLabel--on' : 'TagLabel untagged'}>
+          {app.translator.trans(
+            isEvent
+              ? 'hsjes-calendar.forum.controls.edit_event'
+              : 'hsjes-calendar.forum.controls.add_event'
+          )}
+        </span>
+      </a>,
+      100
     );
   });
 

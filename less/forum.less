@@ -10,49 +10,24 @@
     box-sizing: border-box;
   }
 
-  &-rangeInput {
-    height: 28px;
-    padding: 4px 10px !important;
-    font-size: 13px;
-  }
+  // Inherit FormControl height/padding so the range input matches
+  // 'Název diskuze' input visually.
 }
 
-// Composer event toggle — visually matches Vybrat štítky / Přidat anketu
-// which use <a><span class="TagLabel untagged">…</span></a> markup, NOT
-// Flarum's .Button. We mirror that with our own <a><span class="EventLabel">.
+// Composer event toggle — uses <span class="TagLabel untagged"> directly
+// to inherit the EXACT styling of Vybrat štítky / Přidat anketu (size,
+// border, padding, font). For "on" state we keep TagLabel base + our
+// own modifier that fills with the primary color.
 .DiscussionComposer-eventToggle {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
 }
 
-.EventLabel {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-  line-height: 1.4;
-
-  &--off {
-    background: transparent;
-    border: 2px dotted var(--muted-color);
-    color: var(--muted-color);
-
-    &:hover {
-      border-color: var(--text-color);
-      color: var(--text-color);
-    }
-  }
-
-  &--on {
-    background: var(--primary-color);
-    border: 2px solid var(--primary-color);
-    color: #fff;
-  }
+.TagLabel.EventLabel--on {
+  background: var(--primary-color) !important;
+  border: 2px solid var(--primary-color) !important;
+  color: #fff !important;
 }
 
 // Force flex on ComposerBody-header so we can use `order` to position
@@ -82,15 +57,16 @@
   order: 200;
 }
 
+// Range picker sits ABOVE the title input (between toggle button and
+// discussionTitle).
 .ComposerBody-header > .item-event-picker {
   flex: 1 1 100% !important;
-  order: 300;
+  order: 150;
 }
 
-// On mobile the composer otherwise has a tiny editor area because the
-// header rows (buttons + title input + range input) eat most of the
-// fixed composer height. Expand the composer to take most of the screen
-// and give the editor a generous min-height.
+// On mobile, prevent the toggle button from wrapping to a second row;
+// keep all three buttons (Vybrat štítky, Přidat anketu, Datum události)
+// on a single line like on desktop.
 @media (max-width: 767px) {
   .App-composer .Composer.Composer--visible,
   .App-composer .Composer {
@@ -101,6 +77,11 @@
   .ComposerBody-editor .ProseMirror.TextEditor-editor,
   .ComposerBody-editor .Composer-flexible {
     min-height: 250px !important;
+  }
+
+  // Tighter gap so all three buttons fit on one row in mobile width
+  .ComposerBody-header {
+    gap: 4px;
   }
 }
 
@@ -364,14 +345,17 @@
     &:hover { background: var(--link-color) !important; color: #fff !important; }
   }
 
-  // Range mode: between start and end. Default is white-ish, force dark blue.
+  // Range mode: between start and end. Default Flatpickr uses a
+  // box-shadow trick to fill the gap between cells — that creates
+  // visible darker vertical stripes on overlap. We just use a plain
+  // background instead.
   &.inRange,
   &.inRange:hover,
   &.inRange:focus {
     background: rgba(21, 101, 192, 0.35) !important;
-    border-color: transparent !important;
+    border-color: rgba(21, 101, 192, 0.35) !important;
     color: var(--text-color) !important;
-    box-shadow: -5px 0 0 rgba(21, 101, 192, 0.35), 5px 0 0 rgba(21, 101, 192, 0.35) !important;
+    box-shadow: none !important;
   }
 
   &.selected, &.selected:hover,
