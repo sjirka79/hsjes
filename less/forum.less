@@ -31,7 +31,7 @@
   padding: 2px 10px;
   border-radius: 4px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
@@ -85,6 +85,23 @@
 .ComposerBody-header > .item-event-picker {
   flex: 1 1 100% !important;
   order: 300;
+}
+
+// On mobile the composer otherwise has a tiny editor area because the
+// header rows (buttons + title input + range input) eat most of the
+// fixed composer height. Expand the composer to take most of the screen
+// and give the editor a generous min-height.
+@media (max-width: 767px) {
+  .App-composer .Composer.Composer--visible,
+  .App-composer .Composer {
+    height: calc(100vh - 56px) !important;
+    max-height: calc(100vh - 56px) !important;
+  }
+
+  .ComposerBody-editor .ProseMirror.TextEditor-editor,
+  .ComposerBody-editor .Composer-flexible {
+    min-height: 250px !important;
+  }
 }
 
 // Event modal — breathing room before the Save button
