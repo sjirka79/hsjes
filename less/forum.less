@@ -1,17 +1,20 @@
 // Composer event controls — just the range picker; the toggle is a
 // separate <a> in DiscussionComposer headerItems.
+// Range picker is rendered as <h3 class="EventComposerControls"><input/></h3>
+// to mirror the discussionTitle structure exactly. Reset h3 margin so it
+// doesn't push surrounding items.
+h3.EventComposerControls,
 .EventComposerControls {
+  margin: 0 !important;
   width: 100%;
 
-  &-rangeInput,
+  input.FormControl,
   input.flatpickr-input,
-  input.form-control.input {
+  input.form-control.input,
+  &-rangeInput {
     width: 100% !important;
     box-sizing: border-box;
   }
-
-  // Inherit FormControl height/padding so the range input matches
-  // 'Název diskuze' input visually.
 }
 
 // Composer event toggle — uses <span class="TagLabel untagged"> directly
@@ -345,17 +348,16 @@
     &:hover { background: var(--link-color) !important; color: #fff !important; }
   }
 
-  // Range mode: between start and end. Default Flatpickr uses a
-  // box-shadow trick to fill the gap between cells — that creates
-  // visible darker vertical stripes on overlap. We just use a plain
-  // background instead.
+  // Range mode: between start and end. Use solid (opaque) color so that
+  // the box-shadow trick (which fills the gap between cells) doesn't
+  // create darker vertical stripes from overlapping translucency.
   &.inRange,
   &.inRange:hover,
   &.inRange:focus {
-    background: rgba(21, 101, 192, 0.35) !important;
-    border-color: rgba(21, 101, 192, 0.35) !important;
-    color: var(--text-color) !important;
-    box-shadow: none !important;
+    background: #13407c !important;
+    border-color: #13407c !important;
+    color: #fff !important;
+    box-shadow: -5px 0 0 #13407c, 5px 0 0 #13407c !important;
   }
 
   &.selected, &.selected:hover,
@@ -364,10 +366,24 @@
     background: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     color: #fff !important;
-    box-shadow: none !important;
   }
 
-  &.startRange.endRange {
+  // Bridge primary-colored start/end days to the lighter inRange days
+  // so there's no visible gap between them.
+  &.startRange:not(.endRange),
+  &.startRange:not(.endRange):hover {
+    box-shadow: 5px 0 0 #13407c !important;
+  }
+
+  &.endRange:not(.startRange),
+  &.endRange:not(.startRange):hover {
+    box-shadow: -5px 0 0 #13407c !important;
+  }
+
+  // Single-day range (start == end): no bridging needed.
+  &.startRange.endRange,
+  &.startRange.endRange:hover {
+    box-shadow: none !important;
     border-radius: 50px;
   }
 }

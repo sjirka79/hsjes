@@ -3,6 +3,7 @@ import { extend } from 'flarum/common/extend';
 import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
 import EditPostComposer from 'flarum/forum/components/EditPostComposer';
 import DiscussionControls from 'flarum/forum/utils/DiscussionControls';
+import PostControls from 'flarum/forum/utils/PostControls';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import Button from 'flarum/common/components/Button';
 import LinkButton from 'flarum/common/components/LinkButton';
@@ -87,6 +88,35 @@ app.initializers.add('hsjes-calendar', () => {
         </span>
       </a>,
       100
+    );
+  });
+
+  // Add 'Upravit datum' to the dropdown menu of the FIRST POST of a
+  // discussion (the post-level menu next to Reply -> ...). Mirrors the
+  // existing entry in DiscussionControls so the action is reachable
+  // both from the discussion list and from the post itself.
+  extend(PostControls, 'userControls', function (items, post) {
+    if (!post) return;
+    const num = typeof post.number === 'function' ? post.number() : post.number;
+    if (Number(num) !== 1) return;
+
+    const discussion = typeof post.discussion === 'function' ? post.discussion() : null;
+    if (!discussion) return;
+    if (typeof discussion.canRename === 'function' && !discussion.canRename()) return;
+
+    items.add(
+      'event-edit',
+      Button.component(
+        {
+          icon: 'fas fa-calendar-alt',
+          onclick: () => app.modal.show(EventModal, { discussion }),
+        },
+        app.translator.trans(
+          discussion.attribute('isEvent')
+            ? 'hsjes-calendar.forum.controls.edit_event'
+            : 'hsjes-calendar.forum.controls.add_event'
+        )
+      )
     );
   });
 

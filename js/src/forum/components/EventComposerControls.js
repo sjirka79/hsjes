@@ -28,7 +28,7 @@ export default class EventComposerControls extends Component {
   view() {
     const c = this.attrs.composer;
     return (
-      <div className="EventComposerControls">
+      <h3 className="EventComposerControls">
         <input
           type="text"
           className="FormControl EventComposerControls-rangeInput"
@@ -48,7 +48,7 @@ export default class EventComposerControls extends Component {
             });
           }}
         />
-      </div>
+      </h3>
     );
   }
 }
