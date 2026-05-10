@@ -1,15 +1,5 @@
 // Composer event controls — just the range picker; the toggle is a
-// separate button in DiscussionComposer headerItems.
-//
-// Force the picker's <li> in ComposerBody-header to take the full row
-// so the formatted range (e.g. "8. 5. 2026 12:00 do 11. 5. 2026 14:00")
-// fits without truncation.
-.ComposerBody-header > .item-event-picker {
-  display: block !important;
-  width: 100% !important;
-  flex: 1 1 100% !important;
-}
-
+// separate <a> in DiscussionComposer headerItems.
 .EventComposerControls {
   width: 100%;
 
@@ -27,20 +17,52 @@
   }
 }
 
-// Toggle button used in DiscussionComposer + EditPostComposer.
-// We deliberately don't use Button--primary because the theme makes
-// it 44px tall, which is too big next to "Vybrat štítky" / "Přidat anketu".
-// The active state is signaled by a primary-color background only.
-.Button.EventToggle {
-  // Keep default Button height (don't trigger the primary-button enlargement)
+// Composer event toggle — visually matches Vybrat štítky / Přidat anketu
+// which use <a><span class="TagLabel untagged">…</span></a> markup, NOT
+// Flarum's .Button. We mirror that with our own <a><span class="EventLabel">.
+.DiscussionComposer-eventToggle {
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
 
-  &--on,
-  &--on:hover,
-  &--on:focus {
-    background: var(--primary-color) !important;
-    color: #fff !important;
-    border-color: var(--primary-color) !important;
+.EventLabel {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+
+  &--off {
+    background: transparent;
+    border: 2px dashed var(--muted-color);
+    color: var(--muted-color);
+
+    &:hover {
+      border-color: var(--text-color);
+      color: var(--text-color);
+    }
   }
+
+  &--on {
+    background: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    color: #fff;
+  }
+}
+
+// Force item-event-picker to appear on its own row at the END of the header
+// (under the title input). All other items keep their natural order.
+.ComposerBody-header > .item-event-picker {
+  display: block !important;
+  width: 100% !important;
+  flex: 1 1 100% !important;
+  order: 100;
 }
 
 // Event modal — breathing room before the Save button

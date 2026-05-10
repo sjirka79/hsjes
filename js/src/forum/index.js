@@ -24,26 +24,30 @@ app.initializers.add('hsjes-calendar', () => {
   // Add a toggle button to the composer header (next to "Vybrat štítky"
   // and "Přidat anketu"); when active, also render the range picker.
   extend(DiscussionComposer.prototype, 'headerItems', function (items) {
+    const onToggle = () => {
+      this.eventEnabled = !this.eventEnabled;
+      if (!this.eventEnabled) {
+        this.eventStartsAt = null;
+        this.eventEndsAt = null;
+      }
+    };
+
     items.add(
       'event-toggle',
-      Button.component(
-        {
-          className: 'Button',
-          onclick: () => {
-            this.eventEnabled = !this.eventEnabled;
-            if (!this.eventEnabled) {
-              this.eventStartsAt = null;
-              this.eventEndsAt = null;
-            }
-          },
-        },
-        app.translator.trans('hsjes-calendar.forum.composer.event_toggle_button')
-      ),
-      1
+      <a className="DiscussionComposer-eventToggle" onclick={onToggle}>
+        <span
+          className={
+            'EventLabel' + (this.eventEnabled ? ' EventLabel--on' : ' EventLabel--off')
+          }
+        >
+          {app.translator.trans('hsjes-calendar.forum.composer.event_toggle_button')}
+        </span>
+      </a>,
+      10
     );
 
     if (this.eventEnabled) {
-      items.add('event-picker', EventComposerControls.component({ composer: this }), -10);
+      items.add('event-picker', EventComposerControls.component({ composer: this }), -1010);
     }
   });
 
