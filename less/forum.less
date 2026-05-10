@@ -28,19 +28,18 @@
 
 .EventLabel {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 2px 10px;
   border-radius: 4px;
-  font-weight: 700;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
+  line-height: 1.4;
 
   &--off {
     background: transparent;
-    border: 2px dashed var(--muted-color);
+    border: 2px dotted var(--muted-color);
     color: var(--muted-color);
 
     &:hover {
@@ -56,13 +55,36 @@
   }
 }
 
-// Force item-event-picker to appear on its own row at the END of the header
-// (under the title input). All other items keep their natural order.
-.ComposerBody-header > .item-event-picker {
-  display: block !important;
-  width: 100% !important;
-  flex: 1 1 100% !important;
+// Force flex on ComposerBody-header so we can use `order` to position
+// items deterministically. Without this we depend on guessing priorities
+// of flarum/tags + fof/polls, which differ between versions.
+.ComposerBody-header {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px;
+}
+
+// item-title (the composer "Začít diskuzi" h3) and discussionTitle input
+// each take their own row.
+.ComposerBody-header > .item-title,
+.ComposerBody-header > .item-discussionTitle {
+  flex: 1 1 100%;
+}
+
+// Push our toggle to come AFTER tags + polls (which default to order 0)
+// but BEFORE the title input (which we move to order 200).
+.ComposerBody-header > .item-event-toggle {
   order: 100;
+}
+
+.ComposerBody-header > .item-discussionTitle {
+  order: 200;
+}
+
+.ComposerBody-header > .item-event-picker {
+  flex: 1 1 100% !important;
+  order: 300;
 }
 
 // Event modal — breathing room before the Save button
