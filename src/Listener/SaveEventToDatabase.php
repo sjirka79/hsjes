@@ -35,9 +35,10 @@ class SaveEventToDatabase
         }
 
         $tz = new DateTimeZone(self::TZ);
+        $utc = new DateTimeZone('UTC');
 
         try {
-            $startsAt = new DateTime($startsAtRaw, $tz);
+            $startsAt = (new DateTime($startsAtRaw, $tz))->setTimezone($utc);
         } catch (Exception $e) {
             throw new ValidationException(['startsAt' => 'Neplatný formát data začátku.']);
         }
@@ -45,7 +46,7 @@ class SaveEventToDatabase
         $endsAt = null;
         if ($endsAtRaw !== null && $endsAtRaw !== '') {
             try {
-                $endsAt = new DateTime($endsAtRaw, $tz);
+                $endsAt = (new DateTime($endsAtRaw, $tz))->setTimezone($utc);
             } catch (Exception $e) {
                 throw new ValidationException(['endsAt' => 'Neplatný formát data konce.']);
             }
