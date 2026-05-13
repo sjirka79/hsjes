@@ -130,7 +130,12 @@ export default class CalendarPage extends Page {
       initialView: 'dayGridMonth',
       initialDate: isoMonthStart(this.currentDate),
       locale: csLocale,
-      timeZone: 'Europe/Prague',
+      // Use 'local' (browser TZ) — FullCalendar's named-timezone support
+      // ('Europe/Prague') requires an extra TZ plugin; without it FC just
+      // strips the offset from the ISO timestamp and shows UTC numbers.
+      // For our Czech user base browser TZ is Europe/Prague, which is
+      // what we want anyway.
+      timeZone: 'local',
       firstDay: 1,
       headerToolbar: false,
       titleFormat: { year: 'numeric', month: 'long' },
