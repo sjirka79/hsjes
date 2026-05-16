@@ -1,0 +1,27 @@
+.FoFLogInButton.LogInButton--seznam {
+  .Button--color(#fff, #cc0000);
+}
+
+.SeznamIcon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1em;
+  text-align: center;
+  font-weight: 700;
+  font-style: normal;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  border-radius: 2px;
+  background-color: #cc0000;
+  color: #fff;
+  vertical-align: -0.1em;
+
+  &::before {
+    content: "S";
+  }
+}
+
+.FoFLogInButton.LogInButton--seznam .SeznamIcon {
+  background-color: #fff;
+  color: #cc0000;
+}
